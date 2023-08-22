@@ -1,15 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
+import { PrismaService } from '../prisma/prisma/prisma.service';
 
 @Injectable()
 export class RoutesService {
+  constructor(private prisma: PrismaService) {}
+
   create(createRouteDto: CreateRouteDto) {
-    return 'This action adds a new route';
+    return this.prisma.route.create({
+      data: {
+        name: createRouteDto.name,
+        source: {
+          name: 'nome origem',
+          location: {
+            lat: 0,
+            lng: 0,
+          },
+        },
+        destination: {
+          name: 'nome destino',
+          location: {
+            lat: 0,
+            lng: 0,
+          },
+        },
+        distance: 0,
+        duration: 0,
+        directions: '{}',
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all routes`;
+    return this.prisma.route.findMany();
   }
 
   findOne(id: number) {
